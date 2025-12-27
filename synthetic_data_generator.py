@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 import random
+from tqdm import tqdm
 
 # ==============================
 # configuration
@@ -41,7 +42,7 @@ users = {
 transactions = []
 current_time = START_DATE
 
-for i in range(N_TXNS):
+for i in tqdm(range(N_TXNS), desc="Generating transactions"):
     user_id = random.choice(list(users.keys()))
     profile = users[user_id]
 
@@ -92,7 +93,7 @@ df["new_merchant_flag"] = 0
 
 user_groups = df.groupby("user_id")
 
-for user_id, group in user_groups:
+for user_id, group in tqdm(user_groups, desc="Computing user features", total=len(user_groups)):
     times = group["timestamp"]
     amounts = group["amount"]
     merchants = group["merchant_category"]
@@ -130,7 +131,7 @@ df["geo_jump"] = (df["country_code"] != df.groupby("user_id")["country_code"].sh
 # ==============================
 fraud = []
 
-for _, row in df.iterrows():
+for _, row in tqdm(df.iterrows(), desc="Injecting fraud", total=len(df)):
     score = 0
 
     if row["high_amount_flag"] == 1:
