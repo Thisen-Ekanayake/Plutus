@@ -1,0 +1,14 @@
+# Data manipulation
+numpy
+pandas
+
+# Machine Learning
+scikit-learn
+xgboost
+
+# API
+fastapi
+uvicorn
+
+# Explainability
+shap
