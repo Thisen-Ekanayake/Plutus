@@ -4,6 +4,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from datetime import datetime
+import shap
 
 # ==============================
 # load artifacts
@@ -12,6 +13,9 @@ model = joblib.load("artifacts/plutus_xgb.pkl")
 encoders = joblib.load("artifacts/encoders.pkl")
 feature_list = joblib.load("artifacts/feature_list.pkl")
 threshold = joblib.load("artifacts/threshold.pkl")
+
+# SHAP explainer
+explainer = shap.TreeExplainer(model)
 
 app = FastAPI(
     title="Plutus Fraud Detection API",
@@ -75,6 +79,29 @@ def predict(txn: TransactionInput):
         prob = model.predict_proba(X)[0][1]
         pred = int(prob >= threshold)
 
+        # ==============================
+        # SHAP explainability
+        # ==============================
+        shap_values = explainer.shap_values(X)
+
+        # shap_values shape: (1, num_features)
+        shap_vals = shap_values[0]
+
+        # pair feature names with shap values
+        feature_impacts = list(zip(feature_list, shap_vals))
+
+        # sort by absolute impact
+        feature_impacts.sort(key=lambda x: abs(x[1]), reverse=True)
+
+        # top 5 risk drivers
+        top_factors = [
+            {
+                "feature": f,
+                "impact": round(float(v), 4)
+            }
+            for f, v in feature_impacts[:5]
+        ]
+
         decision = "ALLOW"
         if prob >= threshold:
             decision = "BLOCK"
@@ -84,7 +111,8 @@ def predict(txn: TransactionInput):
         return {
             "fraud_probability": round(float(prob), 4),
             "fraud_prediction": pred,
-            "decision": decision
+            "decision": decision,
+            "top_risk_factors": top_factors
         }
     
     except Exception as e:
