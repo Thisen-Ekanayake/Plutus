@@ -16,7 +16,7 @@ START_DATE = datetime(2025, 1, 1)
 
 MERCHANT_CATEGORIES = [
     "groceries", "electronics", "travel", "fuel", "fashion",
-    "restuarants", "health", "subscriptions", "gaming", "luxury"
+    "restaurants", "health", "subscriptions", "gaming", "luxury"
 ]
 
 PAYMENT_METHODS = ["card", "online", "wallet"]
