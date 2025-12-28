@@ -16,3 +16,8 @@ shap
 
 # Dashboard
 streamlit
+altair
+requests
+
+# Utilities
+joblib
