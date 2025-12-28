@@ -32,17 +32,17 @@ def get_transaction_input():
                                                     "restaurants", "health", "subscriptions", "gaming", "luxury"
                                                 ]),
         "payment_method": st.sidebar.selectbox("Payment Method", ["card", "online", "wallet"]),
-        "country_code": st.sidebar.text_input("Country Code", ["US", "UK", "LK", "SG", "DE"]),
+        "country_code": st.sidebar.selectbox("Country Code", ["US", "UK", "LK", "SG", "DE"]),
         "txn_count_1h": st.sidebar.number_input("Txns last 1h", 0, 100, 0),
         "txn_count_24h": st.sidebar.number_input("Txns last 24h", 0, 1000, 0),
         "avg_amount_7d": st.sidebar.number_input("Avg amount last 7d", 0.0, 10000.0, 100.0),
         "amount_deviation": st.sidebar.number_input("Amount deviation", 0.0, 10000.0, 0.0),
         "time_since_last_txn": st.sidebar.number_input("Time since last txn (mins)", 0, 10000, 60),
-        "is_night": st.sidebar.checkbox("Is night?", False),
-        "is_weekend": st.sidebar.checkbox("Is weekend?", False),
-        "new_merchant_flag": st.sidebar.checkbox("New Merchant?", False),
-        "geo_jump": st.sidebar.checkbox("Geo jump?", False),
-        "high_amount_flag": st.sidebar.checkbox("High amount?", False),
+        "is_night": int(st.sidebar.checkbox("Is night?", False)),
+        "is_weekend": int(st.sidebar.checkbox("Is weekend?", False)),
+        "new_merchant_flag": int(st.sidebar.checkbox("New Merchant?", False)),
+        "geo_jump": int(st.sidebar.checkbox("Geo jump?", False)),
+        "high_amount_flag": int(st.sidebar.checkbox("High amount?", False)),
     }
     return data
 
@@ -65,7 +65,7 @@ if st.sidebar.button("Predict Fraud"):
 
         color = "green" if decision=="ALLOW" else "yellow" if decision=="REVIEW" else "red"
         st.markdown(f"**Fraud Probability:** {prob*100:.2f}%")
-        st.markdown(f"**Decision:** <span sytle='color:{color};font-weight:bold'>{decision}</span>", unsafe_allow_html=True)
+        st.markdown(f"**Decision:** <span style='color:{color};font-weight:bold'>{decision}</span>", unsafe_allow_html=True)
 
         # ==============================
         # show top shap factors
