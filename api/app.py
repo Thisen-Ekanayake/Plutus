@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import joblib
 import numpy as np
 import pandas as pd
+from datetime import datetime
 
 # ==============================
 # load artifacts
@@ -22,6 +23,7 @@ app = FastAPI(
 # input schema
 # ==============================
 class TransactionInput(BaseModel):
+    timestamp: str
     amount: float
     merchant_category: str
     payment_method: str
@@ -51,6 +53,11 @@ def health():
 def predict(txn: TransactionInput):
     try:
         data = txn.dict()
+
+        ts =  datetime.fromisoformat(data["timestamp"])
+        data["hour"] = ts.hour
+
+        data.pop("timestamp")
 
         # encode categories
         for col, encoder in encoders.items():
