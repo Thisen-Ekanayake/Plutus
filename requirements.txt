@@ -13,3 +13,6 @@ pydantic
 
 # Explainability
 shap
+
+# Dashboard
+streamlit
