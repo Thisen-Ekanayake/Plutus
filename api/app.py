@@ -94,13 +94,15 @@ def predict(txn: TransactionInput):
         feature_impacts.sort(key=lambda x: abs(x[1]), reverse=True)
 
         # top 5 risk drivers
-        top_factors = [
-            {
+        top_factors =[]
+        for f, v in feature_impacts[:5]:
+            effect = "increase fraud risk" if v > 0 else "reduces fraud risk"
+
+            top_factors.append({
                 "feature": f,
-                "impact": round(float(v), 4)
-            }
-            for f, v in feature_impacts[:5]
-        ]
+                "impact": round(float(v), 4),
+                "effect": effect
+            })
 
         decision = "ALLOW"
         if prob >= threshold:
