@@ -88,6 +88,15 @@ def predict(txn: TransactionInput):
         # ==============================
         shap_values = explainer.shap_values(X)
 
+        # Handle binary classification: shap_values can be a list of arrays (one per class)
+        # or a single array. For binary classification, we want the positive class (index 1)
+        if isinstance(shap_values, list):
+            # Binary classification: use the positive class (fraud) shap values
+            shap_vals = shap_values[1][0] if len(shap_values) > 1 else shap_values[0][0]
+        else:
+            # Single array case
+            shap_vals = shap_values[0]
+
         # pair feature names with shap values
         feature_impacts = list(zip(feature_list, shap_vals))
 
