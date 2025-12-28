@@ -5,14 +5,18 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 import shap
+from pathlib import Path
 
 # ==============================
 # load artifacts
 # ==============================
-model = joblib.load("artifacts/plutus_xgb.pkl")
-encoders = joblib.load("artifacts/encoders.pkl")
-feature_list = joblib.load("artifacts/feature_list.pkl")
-threshold = joblib.load("artifacts/threshold.pkl")
+BASE_DIR = Path(__file__).parent
+ARTIFACTS_DIR = BASE_DIR / "artifacts"
+
+model = joblib.load(ARTIFACTS_DIR / "plutus_xgb.pkl")
+encoders = joblib.load(ARTIFACTS_DIR / "encoders.pkl")
+feature_list = joblib.load(ARTIFACTS_DIR / "feature_list.pkl")
+threshold = joblib.load(ARTIFACTS_DIR / "threshold.pkl")
 
 # SHAP explainer
 explainer = shap.TreeExplainer(model)
@@ -83,9 +87,6 @@ def predict(txn: TransactionInput):
         # SHAP explainability
         # ==============================
         shap_values = explainer.shap_values(X)
-
-        # shap_values shape: (1, num_features)
-        shap_vals = shap_values[0]
 
         # pair feature names with shap values
         feature_impacts = list(zip(feature_list, shap_vals))
