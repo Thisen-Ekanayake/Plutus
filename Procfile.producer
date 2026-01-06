@@ -1,0 +1,1 @@
+worker: cd services/txn_producer && python producer.py
