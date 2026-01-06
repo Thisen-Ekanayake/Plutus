@@ -21,3 +21,6 @@ requests
 
 # Utilities
 joblib
+
+# Producer Consumer requirements
+redis
