@@ -2,7 +2,7 @@ import os
 import time
 import random
 import numpy as np
-from datetime import datetime
+from datetime import datetime, UTC
 import redis
 from urllib.parse import urlparse
 
@@ -66,7 +66,7 @@ def generate_txn():
     return {
         "transaction_id": f"txn_{int(time.time() * 1000)}",
         "user_id": user_id,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "amount": round(amount, 2),
         "merchant_category": random.choice(MERCHANTS),
         "payment_method": random.choice(["card", "online", "wallet"]),
@@ -79,7 +79,13 @@ def generate_txn():
 print("Redis producer started")
 
 while True:
-    txn = generate_txn()
-
-    r.xadd(STREAM, txn)
-    time.sleep(np.random.exponential(1.5))
+    try:
+        txn = generate_txn()
+        r.xadd(STREAM, txn)
+        time.sleep(np.random.exponential(1.5))
+    except redis.exceptions.ConnectionError as e:
+        print(f"Redis connection error: {e}. Retrying in 5 seconds...")
+        time.sleep(5)
+    except Exception as e:
+        print(f"Unexpected error: {e}. Continuing...")
+        time.sleep(1)
