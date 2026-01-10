@@ -22,9 +22,9 @@ def get_redis_client():
     else:
         # Fallback to individual environment variables
         return redis.Redis(
-            host=os.environ.get("REDIS_HOST"),
-            port=int(os.environ.get("REDIS_PORT", 6379)),
-            password=os.environ.get("REDIS_PASSWORD"),
+            host=os.environ.get("REDISHOST"),
+            port=int(os.environ.get("REDISPORT")),
+            password=os.environ.get("REDISPASSWORD"),
             decode_responses=True,
         )
 
