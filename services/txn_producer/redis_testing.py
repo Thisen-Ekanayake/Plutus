@@ -2,7 +2,7 @@ import os
 import redis
 from urllib.parse import urlparse
 
-redis_url = os.environ.get("REDIS_URL")
+redis_url = os.environ.get("REDIS__PUBLIC_URL")
 parsed = urlparse(redis_url)
 r = redis.Redis(
     host=parsed.hostname,
