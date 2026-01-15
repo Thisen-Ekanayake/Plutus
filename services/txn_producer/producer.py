@@ -91,3 +91,10 @@ while True:
         time.sleep(1)
 
     print("Added txn:", txn)
+
+    length = r.xlen("transactions.stream")
+    print("STREAM LENGTH:", length)
+
+    last = r.xrevrange("transactions.stream", "+", "-", count=3)
+    for entry_id, fields in last:
+        print(entry_id, fields)
