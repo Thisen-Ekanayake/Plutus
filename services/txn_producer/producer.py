@@ -89,3 +89,5 @@ while True:
     except Exception as e:
         print(f"Unexpected error: {e}. Continuing...")
         time.sleep(1)
+
+    print("Added txn:", txn)
